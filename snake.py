@@ -10,7 +10,7 @@ turtle.setup(SIZE_X, SIZE_Y)
 
 turtle.penup()
 SQUARE_SIZE = 20
-START_LENGTH = 6
+START_LENGTH = 15
 #Initialize lists
 pos_list = []
 stamp_list = []
@@ -99,6 +99,24 @@ turtle.listen()
 
 TIME_STEP=100
 
+def make_food():
+    #The screen positions go from -SIZE/2 to +SIZE/2
+    #But we need to make food pieces only appear on game squares
+    #So we cut up the game board into multiples of SQUARE_SIZE.
+    min_x=-int(SIZE_X/2/SQUARE_SIZE)+1
+    max_x=int(SIZE_X/2/SQUARE_SIZE)-1
+    min_y=-int(SIZE_Y/2/SQUARE_SIZE)-1
+    max_y=int(SIZE_Y/2/SQUARE_SIZE)+1
+                      
+    food_x = random.randint(min_x,max_x)*SQUARE_SIZE
+    food_y = random.randint(min_y,max_y)*SQUARE_SIZE
+
+    food.goto(food_x,food_y)
+    new_food=(food_x,food_y)
+    food_pos.append(new_food)
+    foodID=food.stamp()
+    food_stamps.append(foodID)
+
 def move_snake():
     my_pos = snake.pos()
     x_pos = my_pos[0]
@@ -128,13 +146,14 @@ def move_snake():
     #pop zeroth element in pos_list to get rid of last the last
     #piece of the tail
     global food_stamps, food_pos
-#If snake is on top of food item
-    if snake.pos() in food_pos:
+    #If snake is on top of food item
+    if my_pos in food_pos:
         food_ind=food_pos.index(snake.pos())
         food.clearstamp(food_stamps[food_ind])
         food_pos.pop(food_ind)
         food_stamps.pop(food_ind)
         print("You have eaten the food!")
+        make_food()
     
     old_stamp = stamp_list.pop(0)
     snake.clearstamp(old_stamp)
@@ -172,31 +191,25 @@ food = turtle.clone()
 food.hideturtle()
 food.shape("trash.gif")
 #Locations of food
-food_pos = [(100,100), (-100,100), (-100,-100), (100,-100)]
+food_pos = [(100,100)]
 food_stamps = []
 
 
 for this_food_pos in food_pos :
     food.goto(this_food_pos)
-    food.stamp()
-    food_stamps.append(this_food_pos)
+    foodstampID=food.stamp()
+    food_stamps.append(foodstampID)
+
+
+    
+if pos_list[-1] == pos_list[0:]:
+    print('you ate yourself!GAMEOVER!')
+    quit()
 
 
 
 
         
-
-                  
-
-
-
-
-        
-
-                  
-
-
-
 
     
 
