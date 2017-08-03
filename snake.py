@@ -10,7 +10,8 @@ turtle.setup(SIZE_X, SIZE_Y)
 
 turtle.penup()
 SQUARE_SIZE = 20
-START_LENGTH = 15
+START_LENGTH = 10
+turtle.title("SNAKE GAME!")
 #Initialize lists
 pos_list = []
 stamp_list = []
@@ -137,11 +138,14 @@ def move_snake():
     else:
         snake.goto(x_pos, y_pos-SQUARE_SIZE)
         print("You moved down!")
-              
+
+    # add head
     my_pos=snake.pos()
     pos_list.append(my_pos)
     new_stamp = snake.stamp()
     stamp_list.append(new_stamp)
+
+    n=0
     ######## SPECIAL PLACE - Remember it for Part 5
     #pop zeroth element in pos_list to get rid of last the last
     #piece of the tail
@@ -153,12 +157,19 @@ def move_snake():
         food_pos.pop(food_ind)
         food_stamps.pop(food_ind)
         print("You have eaten the food!")
+        n=n+1
+        
         make_food()
-    
-    old_stamp = stamp_list.pop(0)
-    snake.clearstamp(old_stamp)
-    pos_list.pop(0)
 
+    else: 
+        old_stamp = stamp_list.pop(0)
+        snake.clearstamp(old_stamp)
+        pos_list.pop(0)
+
+        
+
+    # remove tail    
+    
     new_pos = snake.pos()
     new_x_pos = new_pos[0]
     new_y_pos = new_pos[1]
@@ -181,6 +192,11 @@ def move_snake():
         
         quit()
 
+    if pos_list[-1] in pos_list[:-1]:
+        print('You ate yourself!GAMEOVER!')
+        quit()
+
+
 
     turtle.ontimer(move_snake,TIME_STEP)
 move_snake()
@@ -201,11 +217,7 @@ for this_food_pos in food_pos :
     food_stamps.append(foodstampID)
 
 
-    
-if pos_list[-1] == pos_list[0:]:
-    print('you ate yourself!GAMEOVER!')
-    quit()
-
+#turtle.write("foods eaten:"+str(n))
 
 
 
